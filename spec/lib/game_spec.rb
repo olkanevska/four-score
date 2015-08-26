@@ -7,33 +7,49 @@ module FourScore
     let (:leeloo) { Player.new({name: "Leeloo", token: "O"}) }
     let (:game) { Game.new([korben, leeloo]) }
 
-    context "#initialize" do
-      it "assigns players" do
-        expect(game.current_player.name).to eq 'Korben'
-        expect(game.next_player.name).to eq 'Leeloo'
+    describe "PUBLIC METHODS" do
+
+      context "#initialize" do
+        it "assigns players" do
+          expect(game.current_player.name).to eq 'Korben'
+          expect(game.next_player.name).to eq 'Leeloo'
+        end
       end
+
     end
 
-    context "#switch_players" do
-      it "switches players' turns" do
-        game.switch_players
-        expect(game.current_player.name).to eq 'Leeloo'
-        expect(game.next_player.name).to eq 'Korben'
-      end
-    end
+    describe "PRIVATE METHODS" do
 
-    context "#move_prompt" do
-      it "outputs a string to prompt the current player" do
-        expect(game.move_prompt.class).to eq String
-        expect(game.move_prompt.include?(game.current_player.name)).to eq true
+      context "#switch_players" do
+        it "switches players' turns" do
+          game.send(:switch_players)
+          expect(game.current_player.name).to eq 'Leeloo'
+          expect(game.next_player.name).to eq 'Korben'
+        end
       end
-    end
 
-    context "#get_move" do
-      it "returns an integer" do
-        expect(game.get_move(1).is_a?(Integer)).to eq true
+      context "#move_prompt" do
+        it "outputs a string to prompt the current player" do
+          expect(game.send(:move_prompt).class).to eq String
+          expect(game.send(:move_prompt).include?(game.current_player.name)).to eq true
+        end
       end
-    end
 
+      context "#open_prompt" do
+        it "outputs a string to prompt for an open column" do
+          expect(game.send(:open_prompt, 1).include?('1')).to eq true
+          expect(game.send(:open_prompt, 1).include?('open')).to eq true
+        end
+      end
+
+      context "#set_current_move" do
+        it "returns an integer" do
+          expect(game.current_move).to eq nil
+          game.send(:set_current_move, 1)
+          expect(game.current_move).to eq 1
+        end
+      end
+
+    end
   end
 end

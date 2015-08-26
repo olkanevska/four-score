@@ -17,10 +17,9 @@ module FourScore
 
     # VICTORY CONDITION:
     #
-    # Each player move prompts #victory? on the played column.
     # There are at most 13 winning combinations that a move can
     # be a part of:
-    #  - 4 each of horizontal and both diagonals
+    #  - 4 each of horizontal and both diagonal directions
     #  - 1 vertical (as the last played piece will be on top)
     #
     # (Smaller board sizes will often require fewer checks.)
@@ -33,7 +32,7 @@ module FourScore
     attr_reader :grid, :rows, :columns
 
     def initialize(options = {})
-      @rows = options.fetch(:rows, 6)
+      @rows = options.fetch(:rows, 7)
       @columns = options.fetch(:columns, 7)
       @grid = Array.new(@rows) { Array.new(@columns) }
     end
@@ -45,6 +44,7 @@ module FourScore
         board << row.map { |cell| cell || " " } .join(" ")
         board << "|\n"
       end
+      board << "+" << "--" * (columns - 1) << "-+\n"
       board << " "
       board << (1..columns).to_a.join(" ")
     end
@@ -68,8 +68,8 @@ module FourScore
     def victory?(column, piece)
       y = find_top_piece(x_translate(column))
 
-      check_verticals(x_translate(column), y, piece) ||
-      check_horizontals(x_translate(column), y, piece) ||
+      check_vertical(x_translate(column), y, piece) ||
+      check_horizontal(x_translate(column), y, piece) ||
       check_diagonals(x_translate(column), y, piece)
     end
 
@@ -79,45 +79,93 @@ module FourScore
 
     private
 
-      def has_four_score?(array, value)
-        array.count == 4 &&
-        array.uniq.count == 1 &&
-        array.uniq.include?(value)
-      end
-
-      def check_verticals(x, y, value)
+      def check_vertical(x, y, value)
         return false if y > rows - 4
-        cell_contents = [
-          coords(x, y),
-          coords(x, y+1),
-          coords(x, y+2),
-          coords(x, y+3)
-        ]
-        return has_four_score?(cell_contents, value)
-      end
+  
+        count = 1
 
-      def check_horizontals(x, y, value)
-        x_lower = (x - 3 < 0) ? 0 : x - 3
-        x_upper = (x + 3 > columns - 1) ? columns - 4 : x
-
-        (x_lower..x_upper).each do |i|
-          cell_contents = [
-            coords(i, y),
-            coords(i+1, y),
-            coords(i+2, y),
-            coords(i+3, y)
-          ]
-          return true if has_four_score?(cell_contents, value)
+        # Count down
+        i = y + 1
+        while i < rows && coords(x, i) == value
+          count += 1
+          i += 1
         end
 
-        return false
+        count >= 4
+      end
+
+      def check_horizontal(x, y, value)
+        count = 1
+
+        # Check left
+        i = x - 1
+        while i >= 0 && coords(i, y) == value
+          count += 1
+          i -= 1
+        end
+
+        # Check right
+        i = x + 1
+        while i < columns && coords(i, y) == value
+          count += 1
+          i += 1
+        end
+
+        count >= 4
       end
 
       def check_diagonals(x, y, value)
-        # \ diagonals
+        check_diagonal_1(x, y, value) || check_diagonal_2(x, y, value)
+      end
 
-        # / diagonals
-        return false
+      def check_diagonal_1(x, y, value)
+        # DIAGONAL DIRECTION '\'
+        count = 1
+
+        # Check up-left
+        i = x - 1
+        j = y - 1
+        while i >= 0 && j >= 0 && coords(i, j) == value
+          count += 1
+          i -= 1
+          j -= 1
+        end
+
+        # Check down-right
+        i = x + 1
+        j = y + 1
+        while i < columns && j < rows && coords(i, j) == value
+          count += 1
+          i += 1
+          j += 1
+        end
+
+        count >= 4
+      end
+
+      def check_diagonal_2(x, y, value)
+        # DIAGONAL DIRECTION '/'
+        count = 1
+
+        # Check up-right
+        i = x + 1
+        j = y - 1
+        while i < columns && j >= 0 && coords(i, j) == value
+          count += 1
+          i += 1
+          j -= 1
+        end
+
+        # Check down-left
+        i = x - 1
+        j = y + 1
+        while i >= 0 && j < rows && coords(i, j) == value
+          count += 1
+          i -= 1
+          j += 1
+        end
+
+        count >= 4
       end
 
       def find_top_piece(x)

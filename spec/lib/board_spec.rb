@@ -10,8 +10,8 @@ module FourScore
 
       context "#initialize" do
 
-        it "defaults to 6 rows with no options" do
-          expect(Board.new.grid.size).to eq 6
+        it "defaults to 7 rows with no options" do
+          expect(Board.new.grid.size).to eq 7
         end
 
         it "defaults to 7 columns with no options" do
@@ -79,7 +79,6 @@ module FourScore
       context "#victory?" do
 
         it "finds horizontal lines" do
-          board = Board.new
           expect(board.victory?(1, "X")).to eq false
 
           3.times do |n|
@@ -92,7 +91,6 @@ module FourScore
         end
 
         it "finds vertical lines" do
-          board = Board.new
           expect(board.victory?(4, "X")).to eq false
 
           3.times do
@@ -104,28 +102,49 @@ module FourScore
           expect(board.victory?(4, "X")).to eq true
         end
 
-        it "finds diagonal lines"
-          # board = Board.new
-          # expect(board.victory?(1, "X")).to eq false
+        it "finds '/' diagonal lines" do
+          expect(board.victory?(1, "X")).to eq false
 
-          # board.drop_into_column(1, "X")
-          # expect(board.victory?(1, "X")).to eq false
+          board.drop_into_column(1, "X")
+          expect(board.victory?(1, "X")).to eq false
 
-          # board.drop_into_column(2, "O")
-          # board.drop_into_column(2, "X")
-          # expect(board.victory?(2, "X")).to eq false
+          board.drop_into_column(2, "O")
+          board.drop_into_column(2, "X")
+          expect(board.victory?(2, "X")).to eq false
 
-          # board.drop_into_column(3, "O")
-          # board.drop_into_column(3, "O")
-          # board.drop_into_column(3, "X")
-          # expect(board.victory?(4, "X")).to eq false
+          board.drop_into_column(3, "O")
+          board.drop_into_column(3, "O")
+          board.drop_into_column(3, "X")
+          expect(board.victory?(3, "X")).to eq false
 
-          # board.drop_into_column(4, "O")
-          # board.drop_into_column(4, "O")
-          # board.drop_into_column(4, "O")
-          # board.drop_into_column(4, "X")
-          # expect(board.victory?(4, "X")).to eq true
+          board.drop_into_column(4, "O")
+          board.drop_into_column(4, "O")
+          board.drop_into_column(4, "O")
+          board.drop_into_column(4, "X")
+          expect(board.victory?(4, "X")).to eq true
+        end
 
+        it "finds '\\' diagonal lines" do
+          expect(board.victory?(4, "X")).to eq false
+
+          board.drop_into_column(4, "X")
+          expect(board.victory?(4, "X")).to eq false
+
+          board.drop_into_column(3, "O")
+          board.drop_into_column(3, "X")
+          expect(board.victory?(3, "X")).to eq false
+
+          board.drop_into_column(2, "O")
+          board.drop_into_column(2, "O")
+          board.drop_into_column(2, "X")
+          expect(board.victory?(2, "X")).to eq false
+
+          board.drop_into_column(1, "O")
+          board.drop_into_column(1, "O")
+          board.drop_into_column(1, "O")
+          board.drop_into_column(1, "X")
+          expect(board.victory?(1, "X")).to eq true
+        end
       end
 
       context "#draw?" do
@@ -139,6 +158,7 @@ module FourScore
           small_board.drop_into_column(1, "X")
           small_board.drop_into_column(2, "X")
           expect(small_board.draw?).to eq false
+
           small_board.drop_into_column(2, "X")
           expect(small_board.draw?).to eq true
         end

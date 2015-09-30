@@ -1,6 +1,6 @@
 module FourScore
   class Game
-    attr_reader :current_player, :next_player, :current_move, :board, :winner
+    attr_reader :current_player, :next_player, :board, :winner
 
     def initialize(players, board = Board.new)
       @board = board

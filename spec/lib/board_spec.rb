@@ -187,15 +187,15 @@ module FourScore
       context "#translate" do
 
         it "zero-bases column indices" do
-          x = Board.new.send(:x_translate, 5)
+          x = Board.new.send(:trans_x, 5)
           expect(x).to eq 4
         end
 
         it "alternates origin point and zero-bases row indices" do
-          y = board.send(:y_translate, board.rows)
+          y = board.send(:trans_y, board.rows)
           expect(y).to eq 0
 
-          y = Board.new.send(:y_translate, 1)
+          y = Board.new.send(:trans_y, 1)
           expect(y).to eq board.rows - 1
         end
       end

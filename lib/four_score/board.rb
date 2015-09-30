@@ -15,26 +15,13 @@ module FourScore
     # so public methods (based on more readable Cartesian coordinates)
     # pass translated versions of the coords into private methods
 
-    # VICTORY CONDITION:
-    #
-    # There are at most 13 winning combinations that a move can
-    # be a part of:
-    #  - 4 each of horizontal and both diagonal directions
-    #  - 1 vertical (as the last played piece will be on top)
-    #
-    # (Smaller board sizes will often require fewer checks.)
-    #
-    # These are each checked by individual #check_horizontal, etc methods
-    # which calculate and test groups of cells for having unique values.
-    # Each method checks only the minimum number set of cells necessary, given
-    # that a play made by the edge of the board has fewer than 4 sets to check.
-
-    attr_reader :grid, :rows, :columns
+    attr_reader :grid, :rows, :columns, :moves
 
     def initialize(options = {})
       @rows = options.fetch(:rows, 7)
       @columns = options.fetch(:columns, 7)
       @grid = Array.new(@rows) { Array.new(@columns) }
+      @moves = 0
     end
 
     def display
@@ -50,7 +37,7 @@ module FourScore
     end
 
     def position(x, y)
-      coords(x_translate(x), y_translate(y))
+      coords(trans_x(x), trans_y(y))
     end
 
     def valid_move?(column)
@@ -58,26 +45,64 @@ module FourScore
     end
 
     def column_open?(column)
-      coords(x_translate(column), 0).nil?
+      coords(trans_x(column), 0).nil?
     end
 
     def drop_into_column(column, piece)
-      place_piece(x_translate(column), piece)
+      if place_piece(trans_x(column), piece)
+        @moves += 1
+        return true
+      else
+        return false
+      end
     end
 
     def victory?(column, piece)
-      y = find_top_piece(x_translate(column))
+      y = find_top_piece(trans_x(column))
 
-      check_vertical(x_translate(column), y, piece) ||
-      check_horizontal(x_translate(column), y, piece) ||
-      check_diagonals(x_translate(column), y, piece)
+      check_vertical(trans_x(column), y, piece) ||
+      check_horizontal(trans_x(column), y, piece) ||
+      check_diagonals(trans_x(column), y, piece)
     end
 
     def draw?
-      !grid.flatten.include?(nil)
+      moves >= columns * rows
     end
 
     private
+
+      def find_top_piece(x)
+        (0...rows).each do |y|
+          return y unless coords(x, y).nil?
+        end
+        -1
+      end
+
+      def place_piece(x, value, y = rows - 1)
+        return false if y < 0
+        if coords(x, y).nil?
+          set_coords(x, y, value)
+          return true
+        else
+          place_piece(x, value, y - 1)
+        end
+      end
+
+      def coords(x, y)
+        grid[y][x]
+      end
+
+      def set_coords(x, y, value)
+        grid[y][x] = value
+      end
+
+      def trans_x(x)
+        x - 1
+      end
+
+      def trans_y(y)
+        rows - y
+      end
 
       def check_vertical(x, y, value)
         return false if y > rows - 4
@@ -166,39 +191,6 @@ module FourScore
         end
 
         count >= 4
-      end
-
-      def find_top_piece(x)
-        (0...rows).each do |y|
-          return y unless coords(x, y).nil?
-        end
-        return -1
-      end
-
-      def place_piece(x, value, y = rows - 1)
-        return false if y < 0
-        if coords(x, y).nil?
-          set_coords(x, y, value)
-          return true
-        else
-          place_piece(x, value, y - 1)
-        end
-      end
-
-      def coords(x, y)
-        grid[y][x]
-      end
-
-      def set_coords(x, y, value)
-        grid[y][x] = value
-      end
-
-      def x_translate(x)
-        x - 1
-      end
-
-      def y_translate(y)
-        rows - y
       end
   end
 end

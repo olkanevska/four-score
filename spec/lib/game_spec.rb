@@ -42,14 +42,6 @@ module FourScore
         end
       end
 
-      context "#set_current_move" do
-        it "returns an integer" do
-          expect(game.current_move).to eq nil
-          game.send(:set_current_move, 1)
-          expect(game.current_move).to eq 1
-        end
-      end
-
     end
   end
 end

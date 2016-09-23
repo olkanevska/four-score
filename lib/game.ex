@@ -1,12 +1,12 @@
-defmodule Fourscore do
+defmodule Game do
   defstruct players: [], board: "board"
 
   @tokens [first: "O", second: "X"]
 
-  def new, do: %Fourscore{}
+  def new, do: %Game{}
 
-  def create_players(fourscore) do
-    %Fourscore{fourscore |
+  def create_players(game) do
+    %Game{game |
       players: Enum.map(@tokens, fn {ordinal, token} ->
         Player.new(
           name: prompt("Enter #{ordinal} player: "),
@@ -16,9 +16,9 @@ defmodule Fourscore do
     }
   end
 
-  def create_board(fourscore) do
+  def create_board(game) do
     # TODO: Update .prompt so it checks input values
-    %Fourscore{fourscore |
+    %Game{game |
       board: case prompt("\nUse (1) standard or (2) custom board: ") do
         "1" ->
           Board.new

@@ -11,7 +11,7 @@ defmodule Board do
     |> add_rows_to_string(board, board.rows)
   end
 
-  defp add_rows_to_string(string, board, row) when row == 0 do string end
+  defp add_rows_to_string(string, _board, row) when row == 0 do string end
   defp add_rows_to_string(string, board, row) do
     string <> "\n" <> row_to_string(board, row)
     |> add_rows_to_string(board, row - 1)

@@ -4,23 +4,22 @@ defmodule Debug do
     IO.puts("The Game:")
     print_players(game)
     IO.puts(nil)
-    # print_board(game)
+    print_board(game)
     IO.puts("***********************DEV\n")
 
     game
   end
 
   defp print_players(game) do
-    IO.puts("Here are the current players:")
+    IO.puts("Players:")
     Enum.each(game.players, fn player ->
-      player |> Player.to_string |> IO.puts
+      IO.puts(player)
     end)
     game
   end
 
   defp print_board(game) do
-    IO.puts("Here is the current board:")
-    game.board |> Board.to_string |> IO.puts
+    IO.puts("Board:\n#{game.board}")
     game
   end
 end

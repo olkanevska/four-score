@@ -1,35 +1,29 @@
 defmodule Game do
-  defstruct players: [], board: "board"
+  import Game.IO
+
+  defstruct players: [], board: nil
 
   @tokens [first: "O", second: "X"]
 
   def new, do: %Game{}
 
   def create_players(game) do
-    %Game{game |
-      players: Enum.map(@tokens, fn {ordinal, token} ->
-        Player.new(
-          name: prompt("Enter #{ordinal} player: "),
-          token: token
-        )
-      end)
-    }
+    players = Enum.map(@tokens, fn {ordinal, token} ->
+      get_string("Enter #{ordinal} player name: ")
+      |> Player.new(token)
+    end)
+    %Game{game | players: players}
   end
 
   def create_board(game) do
-    # TODO: Update .prompt so it checks input values
-    %Game{game |
-      board: case prompt("\nUse (1) standard or (2) custom board: ") do
-        "1" ->
-          Board.new
-        _ ->
-          Board.new(
-            rows: prompt("Number of rows (4-16): "),
-            columns: prompt("Number of columns (4-16): ")
-          )
-      end
-    }
+    board = case get_num("\nUse (1) standard or (2) custom board: ", 1, 2) do
+      1 ->
+        Board.new
+      _ ->
+        columns = get_num("Number of columns (4-16): ", 4, 16)
+        rows = get_num("Number of rows (4-16): ", 4, 16)
+        Board.new(columns, rows)
+    end
+    %Game{game | board: board}
   end
-
-  defp prompt(string), do: string |> IO.gets |> String.trim
 end

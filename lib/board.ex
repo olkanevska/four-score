@@ -1,45 +1,42 @@
 defmodule Board do
-  defstruct rows: nil, columns: nil, grid: nil
+  defstruct columns: nil, rows: nil, grid: nil
 
-  def new do
-    new(rows: 7, columns: 7)
+  def new(columns \\ 7, rows \\ 7) do
+    %Board{columns: columns, rows: rows, grid: create_grid(columns, rows)}
   end
 
-  def new(rows: rows, columns: columns) do
-    %Board{
-      rows: rows,
-      columns: columns,
-      grid: create_grid(rows, columns)
-    }
+  def to_string(board) do
+    "-"
+    |> String.duplicate(board.columns)
+    |> add_rows_to_string(board, board.rows)
   end
 
-  # def to_string(board) do
-    # Enum.map(1..5, fn _row ->
-      # "board row\n"
-    # end)
-  # end
-
-  defp create_grid(rows, columns) do
-    %{} |> create_columns(rows, columns)
+  defp add_rows_to_string(string, board, row) when row == 0 do string end
+  defp add_rows_to_string(string, board, row) do
+    string <> "\n" <> row_to_string(board, row)
+    |> add_rows_to_string(board, row - 1)
   end
 
-  defp create_columns(grid, row, column) when column == 0 do
+  defp row_to_string(board, row) do
+    "|" <> Enum.reduce(1..board.columns, "", fn (col, str) -> 
+      str <> board.grid[col][row]
+    end) <> "|"
+  end
+
+  defp create_grid(columns, rows), do: create_columns(%{}, columns, rows)
+
+  defp create_columns(grid, column, _row) when column == 0 do grid end
+  defp create_columns(grid, column, row) do
+    rows = create_rows(%{}, row)
     grid
+    |> Map.put(column, rows)
+    |> create_columns(column - 1, row)
   end
 
-  defp create_columns(grid, rows, column) do
-    grid
-    |> Map.put(column, create_rows(%{}, rows))
-    |> create_columns(rows, column - 1)
-  end
-
-  defp create_rows(map, row) when row == 0 do
-    map
-  end
-
+  defp create_rows(map, row) when row == 0 do map end
   defp create_rows(map, row) do
     map
-    |> Map.put(row, "X")
+    |> Map.put(row, " ")
     |> create_rows(row - 1)
   end
 end

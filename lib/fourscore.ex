@@ -5,6 +5,7 @@ defmodule Fourscore do
     Game.new
     |> Game.create_players
     |> Game.create_board
-    |> Debug.print_game
+    |> Game.loop
+    |> Game.finish
   end
 end

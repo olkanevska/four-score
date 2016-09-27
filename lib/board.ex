@@ -6,20 +6,35 @@ defmodule Board do
     %Board{columns: columns, rows: rows, grid: grid}
   end
 
+  def find_open_cell(%Board{columns: cols} = board, col) when col in 1..cols do
+    Enum.find 1..board.rows, fn row ->
+      board.grid[col][row] == " "
+    end
+  end
+
+  def add_piece(%Board{grid: grid} = board, token, col, row) do
+    new_row_map = Map.put(grid[col], row, token)
+    new_grid = Map.put(grid, col, new_row_map)
+    %Board{board | grid: new_grid}
+  end
+
   def to_string(board) do
-    # String.duplicate("__", board.columns) <> "_"
-    ""
+    "" # String.duplicate("__", board.columns) <> "_"
     |> add_rows_to_string(board, board.rows)
     |> add_columns_to_string(board.columns)
   end
 
   defp add_rows_to_string(string, board, row) when row > 0 do
-    string <> "|" <> Enum.reduce(1..board.columns, "", fn (col, str) ->
-      str <> board.grid[col][row] <> "|"
-    end) <> "\n"
+    string <> row_to_string(board, row)
     |> add_rows_to_string(board, row - 1)
   end
   defp add_rows_to_string(string, _board, _row), do: string
+
+  defp row_to_string(board, row) do
+    Enum.reduce(1..board.columns, "", fn (col, str) ->
+      str <> "|" <> board.grid[col][row]
+    end) <> "|\n"
+  end
 
   defp add_columns_to_string(string, cols) do
     string <> " " <> Enum.join(1..cols, " ")

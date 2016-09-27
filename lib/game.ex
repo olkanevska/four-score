@@ -27,7 +27,10 @@ defmodule Game do
   end
 
   def loop(game) do
-    case player_move(game) do
+    IO.puts("\n#{game.board}\n")
+    {board, col, row} = choose_column(game)
+
+    case check_for_win(board, col, row) do
       {:win, player} -> %Game{game | victor: player}
       {:draw}        -> game
       {:ok, board}   ->
@@ -38,21 +41,33 @@ defmodule Game do
   def finish(%Game{victor: victor}) when victor do nil end
   def finish(_game), do: nil
 
-  defp player_move(game) do
+  defp choose_column(game) do
     player = Enum.at(game.players, game.next_player)
 
-    "#{player.name}, choose column: "
-    |> choose_column(game)
-    |> check_winner()
+    col ="#{player.name}, choose column: "
+    |> get_num(1, game.board.columns)
 
-    {:ok, game.board}
+    case Board.find_open_cell(game.board, col) do
+      nil -> choose_column(game)
+      row ->
+        board = Board.add_piece(game.board, player.token, col, row)
+        print_board(board)
+        {board, col, row}
+    end
   end
 
-  defp choose_column(prompt, game) do
-    get_num(prompt, 1, game.board.columns)
+  defp print_board(board) do
+    IO.puts("\n#{board}\n")
   end
 
-  defp check_winner(game) do
-    game
+  defp check_for_win(board, column, row) do
+    # check_vertical(board, column, row) ||
+    # check_first_diagonal(board, column, row) ||
+    # check_second_diagonal(board, column, row)
+    {:ok, board}
+  end
+
+  defp check_vertical(_board, _column, row) when row < 4 do false end
+  defp check_vertical(%Board{grid: grid}, column, row) do
   end
 end

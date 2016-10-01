@@ -55,11 +55,23 @@ defmodule Game do
   end
 
   defp check_for_win(board, col, row, token) do
+    check_vertical(board, col, row, token)   ||
     check_horizontal(board, col, row, token) ||
-    check_vertical(board, col, row, token) ||
-    check_diagonals(board, col, row) ||
+    check_diagonal(board, col, row, token)   ||
+    check_antidiagonal(board, col, row, token) ||
     {:ok, board}
   end
+
+  defp check_vertical(_, _, row, _) when row < 4 do false end
+  defp check_vertical(%Board{rows: rows} = board, col, row, token) do
+    1 |> check_down(board, col, row, token)
+    # row - 3..row
+    # |> Enum.reduce("", fn (y, str) -> str <> board.grid[col][y] end)
+    # |> String.contains?(String.duplicate(token, 4))
+  end
+
+  defp check_down(counter, _board, _col, row) when row == 0 do counter end
+  defp check_down(counter, board, col, row)
 
   defp check_horizontal(%Board{cols: cols} = board, col, row, token) do
     position_range(col, cols)
@@ -67,15 +79,14 @@ defmodule Game do
     |> String.contains?(String.duplicate(token, 4))
   end
 
-  defp check_vertical(_, _, row, _) when row < 4 do false end
-  defp check_vertical(%Board{rows: rows} = board, col, row, token) do
-    position_range(row, rows)
-    |> Enum.reduce("", fn (y, str) -> str <> board.grid[col][y] end)
-    |> String.contains?(String.duplicate(token, 4))
+  # "\" Diagonal
+  defp check_diagonal(_, _, row, _) when row < 4 do false end
+  defp check_diagonal(%Board{rows: rows} = board, col, row, token) do
   end
 
-  defp check_diagonals(_, _, row, _) when row < 4 do false end
-  defp check_diagonals(%Board{rows: rows} = board, col, row, token) do
+  # "/" Antidiagonal
+  defp check_antidiagonal(_, _, row, _) when row < 4 do false end
+  defp check_antidiagonal(%Board{rows: rows} = board, col, row, token) do
   end
 
   defp position_range(pos, total), do: min_pos(pos)..max_pos(pos, total)

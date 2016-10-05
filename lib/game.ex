@@ -66,7 +66,7 @@ defmodule Game do
       nil ->
         choose_col(board, player)
       row ->
-        board = Board.add_piece(board, player.token, col, row)
+        board = Board.add_piece(board, col, row, player.token)
         {board, col, row}
     end
   end

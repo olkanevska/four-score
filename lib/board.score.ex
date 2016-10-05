@@ -7,139 +7,63 @@ defmodule Board.Score do
     false
   end
   def win?(%Board{} = board, col, row, token) do
-    vertical?(board, col, row, token)   ||
-    horizontal?(board, col, row, token) ||
-    diagonal?(board, col, row, token)   ||
-    antidiagonal?(board, col, row, token)
+    vertical_win?(board, col, row, token)
+    || horizontal_win?(board, col, row, token)
+    || diagonal_win?(board, col, row, token)
+    || antidiagonal_win?(board, col, row, token)
   end
 
-  #
-  # Individual direction checks
-  #
-
-  defp vertical?(%Board{}, _, row, _) when row < 4 do false end
-  defp vertical?(%Board{} = board, col, row, token) do
-    count_down(1, board, col, row, token) >= 4
+  defp vertical_win?(%Board{}, _, row, _) when row < 4 do false end
+  defp vertical_win?(%Board{} = board, col, row, token) do
+    # Count down
+    3 < count(1, board, col, row, 0, -1, token)
   end
 
-  defp horizontal?(%Board{} = board, col, row, token) do
+  defp horizontal_win?(%Board{} = board, col, row, token) do
     1
-    |> count_left(board, col, row, token)
-    |> count_right(board, col, row, token)
-    |> Kernel.>=(4)
+    |> count(board, col, row, -1, 0, token) # Left
+    |> count(board, col, row,  1, 0, token) # Right
+    |> Kernel.>(3)
   end
-
 
   # "\" Diagonal
-  defp diagonal?(%Board{} = board, col, row, token) do
+  defp diagonal_win?(%Board{} = board, col, row, token) do
     1
-    |> count_up_left(board, col, row, token)
-    |> count_down_right(board, col, row, token)
-    |> Kernel.>=(4)
+    |> count(board, col, row, -1,  1, token) # Up/Left
+    |> count(board, col, row,  1, -1, token) # Down/Right
+    |> Kernel.>(3)
   end
 
   # "/" Antidiagonal
-  defp antidiagonal?(%Board{} = board, col, row, token) do
+  defp antidiagonal_win?(%Board{} = board, col, row, token) do
     1
-    |> count_down_left(board, col, row, token)
-    |> count_up_right(board, col, row, token)
-    |> Kernel.>=(4)
+    |> count(board, col, row, -1, -1, token) # Down/Left
+    |> count(board, col, row,  1,  1, token) # Up/Right
+    |> Kernel.>(3)
   end
 
-  #
-  # Recursively count the number of spaces in the given direction that match
-  # the provided token and add that count to the initial given count,
-  # stopping either when a boundary is hit or the token does not match
-  #
+  # Left boundary
+  defp count(count, _board, 0, _row, _dx, _dy, _token), do: count
 
-  # Down - Check bottom boundary
-  defp count_down(count, _, _, 0, _), do: count
-  defp count_down(count, %Board{} = board, col, row, token) do
-    # Decrement row
-    {c, r} = {col, row - 1}
+  # Bottom boundary
+  defp count(count, _board, _col, 0, _dx, _dy, _token), do: count
+
+  # Right boundary
+  defp count(count, %Board{cols: cols}, col, _row, _dx, _dy, _token)
+  when col > cols do count end
+
+  # Top boundary
+  defp count(count, %Board{rows: rows}, _col, row, _dx, _dy, _token)
+  when row > rows do count end
+
+  # Recursively count next adjacent if matches token
+  defp count(count, %Board{} = board, col, row, dx, dy, token) do
+    {c, r} = {col + dx, row + dy}
     cond do
-      board.grid[c][r] == token -> count_down(count + 1, board, c, r, token)
-      true -> count
-    end
-  end
-
-  # Left - Check left boundary
-  defp count_left(count, %Board{}, 0, _, _), do: count
-  defp count_left(count, %Board{} = board, col, row, token) do
-    # Decrement column
-    {c, r} = {col - 1, row}
-    cond do
-      board.grid[c][r] == token -> count_left(count + 1, board, c, r, token)
-      true -> count
-    end
-  end
-
-  # Up/Left - Check left and top boundaries
-  defp count_up_left(count, %Board{}, 0, _, _), do: count
-  defp count_up_left(count, %Board{rows: rows}, _, row, _) when row > rows do
-    count
-  end
-  defp count_up_left(count, %Board{} = board, col, row, token) do
-    # Decrement column, increment row
-    {c, r} = {col - 1, row + 1}
-    cond do
-      board.grid[c][r] == token -> count_up_left(count + 1, board, c, r, token)
-      true -> count
-    end
-  end
-
-  # Down/Left - Check left and bottom boundaries
-  defp count_down_left(count, %Board{}, 0, _, _), do: count
-  defp count_down_left(count, %Board{}, _, 0, _), do: count
-  defp count_down_left(count, %Board{} = board, col, row, token) do
-    # Decrement column, decrement row
-    {c, r} = {col - 1, row - 1}
-    cond do
-      board.grid[c][r] == token -> count_down_left(count + 1, board, c, r, token)
-      true -> count
-    end
-  end
-
-  # Right - Check right boundary
-  defp count_right(count, %Board{cols: cols}, col, _, _) when col > cols do
-    count
-  end
-  defp count_right(count, %Board{} = board, col, row, token) do
-    # Increment column
-    {c, r} = {col + 1, row}
-    cond do
-      board.grid[c][r] == token -> count_right(count + 1, board, c, r, token)
-      true -> count
-    end
-  end
-
-  # Up/Right - Check top and right boundaries
-  defp count_up_right(count, %Board{rows: rows}, _, row, _) when row > rows do
-    count
-  end
-  defp count_up_right(count, %Board{cols: cols}, col, _, _) when col > cols do
-    count
-  end
-  defp count_up_right(count, %Board{} = board, col, row, token) do
-    # Increment column, increment row
-    {c, r} = {col + 1, row + 1}
-    cond do
-      board.grid[c][r] == token -> count_up_right(count + 1, board, c, r, token)
-      true -> count
-    end
-  end
-
-  # Down/Right - Check bottom and right boundaries
-  defp count_down_right(count, _, _, 0, _), do: count
-  defp count_down_right(count, %Board{cols: cols}, col, _, _) when col > cols do
-    count
-  end
-  defp count_down_right(count, %Board{} = board, col, row, token) do
-    # Increment column, decrement row
-    {c, r} = {col + 1, row - 1}
-    cond do
-      board.grid[c][r] == token -> count_down_right(count + 1, board, c, r, token)
-      true -> count
+      board.grid[c][r] == token ->
+        count(count + 1, board, c, r, dx, dy, token)
+      true ->
+        count
     end
   end
 end

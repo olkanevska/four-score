@@ -1,10 +1,9 @@
 defmodule Board do
-  defstruct cols: nil, rows: nil, grid: nil, openings: nil
+  defstruct grid: %{}, cols: nil, rows: nil, pieces: 0
 
   def new(cols \\ 7, rows \\ 7) do
     %Board{
       grid: %{} |> add_columns(cols, rows),
-      openings: cols * rows,
       cols: cols,
       rows: rows
     }
@@ -13,7 +12,7 @@ defmodule Board do
   def add_piece(%Board{grid: grid} = board, col, row, token) do
     %Board{board |
       grid: put_in(grid[col][row], token),
-      openings: board.openings - 1
+      pieces: board.pieces + 1
     }
   end
 

@@ -1,23 +1,20 @@
 defmodule Board.Score do
-  def full?(%Board{openings: 0}), do: true
-  def full?(_), do: false
+  def full?(%Board{} = board), do: board.pieces >= board.rows * board.cols
 
-  def win?(%Board{openings: openings, cols: cols, rows: rows}, _, _, _)
-  when openings > (cols * rows) - 7 do
-    false
-  end
-  def win?(%Board{} = board, col, row, token) do
+  def win?(%Board{pieces: pieces} = board, col, row, token)
+  when pieces > 7 do
     vertical_win?(board, col, row, token)
     || horizontal_win?(board, col, row, token)
     || diagonal_win?(board, col, row, token)
     || antidiagonal_win?(board, col, row, token)
   end
+  def win?(%Board{}, _col, _row, _token), do: false
 
-  defp vertical_win?(%Board{}, _, row, _) when row < 4 do false end
-  defp vertical_win?(%Board{} = board, col, row, token) do
-    # Count down
-    3 < count(1, board, col, row, 0, -1, token)
+  defp vertical_win?(%Board{} = board, col, row, token)
+  when row > 3 do
+    3 < count(1, board, col, row, 0, -1, token) # Down
   end
+  defp vertical_win?(%Board{}, _col, _row, _token), do: false
 
   defp horizontal_win?(%Board{} = board, col, row, token) do
     1

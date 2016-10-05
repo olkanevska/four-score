@@ -1,4 +1,4 @@
-defmodule Game.IO do
+defmodule Game.UI do
   def get_string(prompt) do
     case prompt |> IO.gets |> String.trim do
       ""  -> get_string(prompt)

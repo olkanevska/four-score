@@ -1,4 +1,4 @@
-defmodule Board.Scoring do
+defmodule Board.Score do
   def full?(%Board{openings: 0}), do: true
   def full?(_), do: false
 
@@ -23,30 +23,27 @@ defmodule Board.Scoring do
   end
 
   defp horizontal?(%Board{} = board, col, row, token) do
-    count =
-      1
-      |> count_left(board, col, row, token)
-      |> count_right(board, col, row, token)
-    count >= 4
+    1
+    |> count_left(board, col, row, token)
+    |> count_right(board, col, row, token)
+    |> Kernel.>=(4)
   end
 
 
   # "\" Diagonal
   defp diagonal?(%Board{} = board, col, row, token) do
-    count =
-      1
-      |> count_up_left(board, col, row, token)
-      |> count_down_right(board, col, row, token)
-    count >= 4
+    1
+    |> count_up_left(board, col, row, token)
+    |> count_down_right(board, col, row, token)
+    |> Kernel.>=(4)
   end
 
   # "/" Antidiagonal
   defp antidiagonal?(%Board{} = board, col, row, token) do
-    count =
-      1
-      |> count_down_left(board, col, row, token)
-      |> count_up_right(board, col, row, token)
-    count >= 4
+    1
+    |> count_down_left(board, col, row, token)
+    |> count_up_right(board, col, row, token)
+    |> Kernel.>=(4)
   end
 
   #

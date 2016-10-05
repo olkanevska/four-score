@@ -1,6 +1,6 @@
 defmodule Game do
-  import Game.IO
-  import Board.Scoring
+  alias Game.UI, as: UI
+  alias Board.Score, as: Score
 
   defstruct players: [], next_player: nil, board: nil, victor: nil
 
@@ -10,18 +10,19 @@ defmodule Game do
 
   def create_players(%Game{} = game) do
     players = Enum.map(@tokens, fn {ordinal, token} ->
-      get_string("Enter #{ordinal} player name: ")
+      "Enter #{ordinal} player name: "
+      |> UI.get_string()
       |> Player.new(token)
     end)
     %Game{game | players: players, next_player: 0}
   end
 
   def create_board(%Game{} = game) do
-    board = case get_num("\nUse (1) standard or (2) custom board: ", 1, 2) do
+    board = case UI.get_num("\nUse (1) standard or (2) custom board: ", 1, 2) do
       1 -> Board.new
       _ ->
-        cols = get_num("Number of columns (5-15): ", 5, 15)
-        rows = get_num("Number of rows (5-15): ", 5, 15)
+        cols = UI.get_num("Number of columns (5-15): ", 5, 15)
+        rows = UI.get_num("Number of rows (5-15): ", 5, 15)
         Board.new(cols, rows)
     end
     %Game{game | board: board}
@@ -36,9 +37,9 @@ defmodule Game do
     game = %Game{game | board: board}
 
     cond do
-      win?(board, col, row, player.token) ->
+      Score.win?(board, col, row, player.token) ->
         %Game{game | victor: player}
-      full?(board) ->
+      Score.full?(board) ->
         game
       true ->
         loop(%Game{game | next_player: 1 - game.next_player})
@@ -54,7 +55,7 @@ defmodule Game do
   end
 
   defp choose_col(board, player) do
-    col = get_num("#{player} - choose column: ", 1, board.cols)
+    col = UI.get_num("#{player} - choose column: ", 1, board.cols)
 
     case Board.find_open_cell(board, col) do
       nil -> choose_col(board, player)

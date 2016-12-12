@@ -2,7 +2,7 @@ defmodule Board.Score do
   def full?(%Board{} = board), do: board.pieces >= board.rows * board.cols
 
   def win?(%Board{pieces: pieces} = board, col, row, token)
-  when pieces > 7 do
+  when pieces > 6 do
     vertical_win?(board, col, row, token)
     || horizontal_win?(board, col, row, token)
     || diagonal_win?(board, col, row, token)
@@ -12,7 +12,7 @@ defmodule Board.Score do
 
   defp vertical_win?(%Board{} = board, col, row, token)
   when row > 3 do
-    3 < count(1, board, col, row, 0, -1, token) # Down
+    count(1, board, col, row, 0, -1, token) > 3 # Down
   end
   defp vertical_win?(%Board{}, _col, _row, _token), do: false
 
@@ -56,11 +56,9 @@ defmodule Board.Score do
   # Recursively count next adjacent if matches token
   defp count(count, %Board{} = board, col, row, dx, dy, token) do
     {c, r} = {col + dx, row + dy}
-    cond do
-      board.grid[c][r] == token ->
-        count(count + 1, board, c, r, dx, dy, token)
-      true ->
-        count
+    case board.grid[c][r] == token do
+      true  -> count(count + 1, board, c, r, dx, dy, token)
+      false -> count
     end
   end
 end

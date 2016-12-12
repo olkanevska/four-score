@@ -1,4 +1,4 @@
-defmodule FourscoreTest do
+defmodule Test.Fourscore do
   use ExUnit.Case
   doctest Fourscore
 

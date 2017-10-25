@@ -1,6 +1,6 @@
 # Fourscore
 
-A Connect Four implementation in Elixir.
+A Connect Four implementation in Elixir, passing game state down through functions.
 
 ## Instructions
 

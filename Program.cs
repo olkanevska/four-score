@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace fourscore_csharp
 {
@@ -14,24 +16,22 @@ namespace fourscore_csharp
     }
   }
 
-  class App
+  class Game
   {
-    public Player[] Players = new Player[2];
+    private Player[] Players = new Player[2];
 
-    public void Run()
+    public void Play()
     {
-      Console.WriteLine("Welcome to Four Score!");
-
       GetPlayers();
       ChooseBoard();
     }
 
     private void GetPlayers()
     {
-      Console.Write("First player: ");
+      Console.Write("\nFirst player: ");
       Players[0] = new Player(Console.ReadLine(), 'X');
 
-      Console.Write("Second player: ");
+      Console.Write("\nSecond player: ");
       Players[1] = new Player(Console.ReadLine(), 'O');
 
       while (
@@ -49,15 +49,44 @@ namespace fourscore_csharp
 
     private void ChooseBoard()
     {
+      Console.Write("\nPlay with a (1) standard or (2) custom board: ");
+
+      int[] options = {1, 2};
+      int choice;
+
+      // TODO: Try to not repeat input logic
+      int.TryParse(Console.ReadLine(), out choice);
+      while (!options.Contains(choice))
+      {
+        Console.Write("Please enter a valid choice: ");
+        int.TryParse(Console.ReadLine(), out choice);
+      }
+
+      Console.WriteLine($"You chose {choice}");
     }
+  }
+
+  class FourScore
+  {
+    private List<Game> Games = new List<Game>();
+
+    public void Run()
+    {
+      Console.WriteLine("Welcome to Four Score!");
+
+      Game game = new Game();
+      Games.Add(game);
+      game.Play();
+    }
+
   }
 
   class Program
   {
     static void Main(string[] args)
     {
-      App app = new App();
-      app.Run();
+      FourScore fourscore = new FourScore();
+      fourscore.Run();
     }
   }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace fourscore_csharp
 {
@@ -54,15 +53,29 @@ namespace fourscore_csharp
       int[] options = {1, 2};
       int choice;
 
-      // TODO: Try to not repeat input logic
-      int.TryParse(Console.ReadLine(), out choice);
-      while (!options.Contains(choice))
-      {
-        Console.Write("Please enter a valid choice: ");
+      while (true) {
         int.TryParse(Console.ReadLine(), out choice);
+
+        if (Array.IndexOf(options, choice) > -1)
+          break;
+
+        Console.Write("Please enter a valid choice: ");
       }
 
-      Console.WriteLine($"You chose {choice}");
+      if (choice == 1)
+        CreateBasicBoard();
+      else
+        CreateCustomBoard();
+    }
+
+    private void CreateBasicBoard()
+    {
+      Console.WriteLine("You chose standard board");
+    }
+
+    private void CreateCustomBoard()
+    {
+      Console.WriteLine("You chose custom board");
     }
   }
 

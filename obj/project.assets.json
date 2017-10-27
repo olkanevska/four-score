@@ -670,11 +670,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/kevo/workspace/projects/fourscore_csharp/fourscore_csharp.csproj",
+      "projectUniqueName": "/Users/kevo/workspace/projects/fourscore/fs-c#/fourscore_csharp.csproj",
       "projectName": "fourscore_csharp",
-      "projectPath": "/Users/kevo/workspace/projects/fourscore_csharp/fourscore_csharp.csproj",
+      "projectPath": "/Users/kevo/workspace/projects/fourscore/fs-c#/fourscore_csharp.csproj",
       "packagesPath": "/Users/kevo/.nuget/packages/",
-      "outputPath": "/Users/kevo/workspace/projects/fourscore_csharp/obj/",
+      "outputPath": "/Users/kevo/workspace/projects/fourscore/fs-c#/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"

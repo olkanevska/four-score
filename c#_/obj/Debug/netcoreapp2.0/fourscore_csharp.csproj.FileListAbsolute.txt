@@ -1,0 +1,10 @@
+/Users/kevo/workspace/projects/fourscore/c#_/bin/Debug/netcoreapp2.0/fourscore_csharp.deps.json
+/Users/kevo/workspace/projects/fourscore/c#_/bin/Debug/netcoreapp2.0/fourscore_csharp.runtimeconfig.json
+/Users/kevo/workspace/projects/fourscore/c#_/bin/Debug/netcoreapp2.0/fourscore_csharp.runtimeconfig.dev.json
+/Users/kevo/workspace/projects/fourscore/c#_/bin/Debug/netcoreapp2.0/fourscore_csharp.dll
+/Users/kevo/workspace/projects/fourscore/c#_/bin/Debug/netcoreapp2.0/fourscore_csharp.pdb
+/Users/kevo/workspace/projects/fourscore/c#_/obj/Debug/netcoreapp2.0/fourscore_csharp.csproj.CoreCompileInputs.cache
+/Users/kevo/workspace/projects/fourscore/c#_/obj/Debug/netcoreapp2.0/fourscore_csharp.AssemblyInfoInputs.cache
+/Users/kevo/workspace/projects/fourscore/c#_/obj/Debug/netcoreapp2.0/fourscore_csharp.AssemblyInfo.cs
+/Users/kevo/workspace/projects/fourscore/c#_/obj/Debug/netcoreapp2.0/fourscore_csharp.dll
+/Users/kevo/workspace/projects/fourscore/c#_/obj/Debug/netcoreapp2.0/fourscore_csharp.pdb

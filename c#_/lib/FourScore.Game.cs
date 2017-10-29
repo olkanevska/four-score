@@ -5,6 +5,7 @@ public partial class FourScore
   private class Game
   {
     private Player[] Players = new Player[2];
+    private Board GameBoard;
 
     public void Play()
     {
@@ -36,18 +37,7 @@ public partial class FourScore
     private void ChooseBoard()
     {
       Console.Write("\nPlay with a (1) standard or (2) custom board: ");
-
-      int[] options = {1, 2};
-      int choice;
-
-      while (true) {
-        int.TryParse(Console.ReadLine(), out choice);
-
-        if (Array.IndexOf(options, choice) > -1)
-          break;
-
-        Console.Write("Please enter a valid choice: ");
-      }
+      int choice = GetIntInRange(1, 2);
 
       if (choice == 1)
         CreateBasicBoard();
@@ -57,12 +47,32 @@ public partial class FourScore
 
     private void CreateBasicBoard()
     {
-      Console.WriteLine("You chose standard board");
+      GameBoard = new Board(7, 7);
     }
 
     private void CreateCustomBoard()
     {
-      Console.WriteLine("You chose custom board");
+      Console.Write("Number of columns (4-16): ");
+      int columns = GetIntInRange(4, 16);
+
+      Console.Write("Number of rows (4-16): ");
+      int rows = GetIntInRange(4, 16);
+
+      GameBoard = new Board(columns, rows);
+    }
+
+    private int GetIntInRange(int lower, int upper)
+    {
+      int choice;
+
+      while (true) {
+        int.TryParse(Console.ReadLine(), out choice);
+
+        if (choice >= lower && choice <= upper)
+          return choice;
+
+        Console.Write("Please enter a valid choice: ");
+      }
     }
   }
 }

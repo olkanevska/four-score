@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 public partial class FourScore
 {
   private class Game
   {
-    private Player[] Players = new Player[2];
+    private List<Player> Players = new List<Player>();
     private Board GameBoard;
 
     public void Play()
@@ -16,21 +17,31 @@ public partial class FourScore
     private void GetPlayers()
     {
       Console.Write("\nFirst player: ");
-      Players[0] = new Player(Console.ReadLine(), 'X');
+      AddPlayer('X');
 
       Console.Write("\nSecond player: ");
-      Players[1] = new Player(Console.ReadLine(), 'O');
+      AddPlayer('O');
+    }
 
-      while (
-        Players[0].Name == Players[1].Name ||
-        Players[1].Name == String.Empty
-      )
+    private void AddPlayer(string token)
+    {
+      Players.Add(new Player(GetPlayerName(), token));
+    }
+
+    private string GetPlayerName()
+    {
+      string name;
+
+      while (true)
       {
-        Console.Write(
-          "Please enter a{0} name: ",
-          Players[0].Name == Players[1].Name ? " unique" : ""
-        );
-        Players[1].Name = Console.ReadLine();
+        name = Console.ReadLine();
+
+        if (name == "")
+          Console.Write("Please enter a name: ");
+        else if (Players.Exists(p => p.Name == name))
+          Console.Write("Please enter a unique name: ");
+        else
+          return name;
       }
     }
 

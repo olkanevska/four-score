@@ -5,16 +5,47 @@ public partial class FourScore
 {
   private class Game
   {
-    private List<Player> Players = new List<Player>();
     private Board GameBoard;
+    private List<Player> Players = new List<Player>();
+    private int CurrentPlayer = 0;
 
     public void Play()
     {
-      GetPlayers();
-      ChooseBoard();
+      CreatePlayers();
+      CreateBoard();
+
+      while (GameBoard.IsNotFinished)
+        PlayRound();
+
+      Console.WriteLine("Game is over!");
     }
 
-    private void GetPlayers()
+    private void PlayRound()
+    {
+      GameBoard.Draw();
+
+      Player p = Players[CurrentPlayer];
+      Console.Write($"[{p.Token}] {p.Name}, please select a column: ");
+
+      int move;
+
+      while (true)
+      {
+        move = GetIntInRange(1, GameBoard.Columns);
+
+        if (GameBoard.IsValidMove(move))
+          break;
+
+        Console.Write("Column {move} is full, please select an open column: ");
+      }
+
+      GameBoard.AddPiece(move, p.Token);
+      GameBoard.CheckState();
+
+      CurrentPlayer = 1 - CurrentPlayer;
+    }
+
+    private void CreatePlayers()
     {
       Console.Write("\nFirst player: ");
       AddPlayer('X');
@@ -23,7 +54,7 @@ public partial class FourScore
       AddPlayer('O');
     }
 
-    private void AddPlayer(string token)
+    private void AddPlayer(char token)
     {
       Players.Add(new Player(GetPlayerName(), token));
     }
@@ -45,7 +76,7 @@ public partial class FourScore
       }
     }
 
-    private void ChooseBoard()
+    private void CreateBoard()
     {
       Console.Write("\nPlay with a (1) standard or (2) custom board: ");
       int choice = GetIntInRange(1, 2);
@@ -63,13 +94,13 @@ public partial class FourScore
 
     private void CreateCustomBoard()
     {
-      Console.Write("Number of columns (4-16): ");
-      int columns = GetIntInRange(4, 16);
-
       Console.Write("Number of rows (4-16): ");
       int rows = GetIntInRange(4, 16);
 
-      GameBoard = new Board(columns, rows);
+      Console.Write("Number of columns (4-16): ");
+      int columns = GetIntInRange(4, 16);
+
+      GameBoard = new Board(rows, columns);
     }
 
     private int GetIntInRange(int lower, int upper)
@@ -77,9 +108,9 @@ public partial class FourScore
       int choice;
 
       while (true) {
-        int.TryParse(Console.ReadLine(), out choice);
+        bool parsed = int.TryParse(Console.ReadLine(), out choice);
 
-        if (choice >= lower && choice <= upper)
+        if (parsed && choice >= lower && choice <= upper)
           return choice;
 
         Console.Write("Please enter a valid choice: ");

@@ -14,7 +14,7 @@ public partial class FourScore
       CreatePlayers();
       CreateBoard();
 
-      while (GameBoard.IsNotFinished)
+      while (!GameBoard.IsFinished)
         PlayRound();
 
       Console.WriteLine("Game is over!");
@@ -27,20 +27,17 @@ public partial class FourScore
       Player p = Players[CurrentPlayer];
       Console.Write($"[{p.Token}] {p.Name}, please select a column: ");
 
-      int move;
+      int column;
 
       while (true)
       {
-        move = GetIntInRange(1, GameBoard.Columns);
+        column = GetIntInRange(1, GameBoard.ColumnCount);
 
-        if (GameBoard.IsValidMove(move))
+        if (GameBoard.AddPiece(column, p.Token))
           break;
 
-        Console.Write("Column {move} is full, please select an open column: ");
+        Console.Write($"Column {column} is full, please select an open column: ");
       }
-
-      GameBoard.AddPiece(move, p.Token);
-      GameBoard.CheckState();
 
       CurrentPlayer = 1 - CurrentPlayer;
     }
@@ -94,13 +91,13 @@ public partial class FourScore
 
     private void CreateCustomBoard()
     {
-      Console.Write("Number of rows (4-16): ");
-      int rows = GetIntInRange(4, 16);
+      Console.Write("Number of columns (4-9): ");
+      int columns = GetIntInRange(4, 9);
 
-      Console.Write("Number of columns (4-16): ");
-      int columns = GetIntInRange(4, 16);
+      Console.Write("Number of rows (4-9): ");
+      int rows = GetIntInRange(4, 9);
 
-      GameBoard = new Board(rows, columns);
+      GameBoard = new Board(columns, rows);
     }
 
     private int GetIntInRange(int lower, int upper)

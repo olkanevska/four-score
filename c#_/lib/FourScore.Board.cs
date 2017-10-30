@@ -4,58 +4,71 @@ public partial class FourScore
 {
   private class Board
   {
-    public int Rows;
-    public int Columns;
-    public bool IsNotFinished = true;
+    public bool IsFinished = false;
+    public int ColumnCount;
 
-    private char[,] Matrix;
+    private Column[] Columns;
+    private int RowCount;
 
-    public Board(int rows, int columns)
+    public Board(int columns, int rows)
     {
-      Rows = rows;
-      Columns = columns;
-      Matrix = new char[rows, columns];
+      ColumnCount = columns;
+      RowCount = rows;
+
+      Columns = new Column[columns];
+
+      for (int i = 0; i < columns; ++i)
+        Columns[i] = new Column(rows);
     }
 
     public void Draw()
     {
       string output = "\n";
 
-      for (int row = 0; row < Rows; ++row)
+      for (int y = 0; y < RowCount; ++y)
       {
         output += "|";
-        for (int col = 0; col < Columns; ++col)
+
+        for (int x = 0; x < ColumnCount; ++x)
         {
-          output += Matrix[row, col] == '\0' ? ' ' : Matrix[row, col];
-          if (col < Columns - 1)
+          output += Columns[x].ContentAt(y);
+
+          if (x < ColumnCount - 1)
             output += ' ';
         }
+
         output += "|\n";
       }
 
-      output += "+" + new String('-', 2 * (Columns - 1)) + "-+\n ";
+      output += "+" + new String('-', 2 * (ColumnCount - 1)) + "-+\n ";
 
-      for (int col = 1; col <= Columns; ++col)
+      for (int col = 1; col <= ColumnCount; ++col)
         output += $"{col} ";
+
+      output += '\n';
 
       Console.WriteLine(output);
     }
 
-    public void CheckState()
+    public bool AddPiece(int column, char token)
     {
-      IsNotFinished = false;
-      // Check if draw
-      // Check if winning move
-    }
+      // From UI perspective, "columns" are 1-based
+      Column col = Columns[column - 1];
 
-    public bool IsValidMove(int column)
-    {
-      // Just check top row
+      if (!col.IsOpen)
+        return false;
+
+      col.AddPiece(token);
+      CheckState();
+
       return true;
     }
 
-    public void AddPiece(int column, char token)
+    private void CheckState()
     {
+      // Check if draw
+      // Check if winning move
+      // IsFinished = true;
     }
   }
 }

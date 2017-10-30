@@ -15,12 +15,6 @@ public partial class FourScore
       Rows = rows;
       Columns = columns;
       Matrix = new char[rows, columns];
-
-      for (int row = 0; row < Rows; row++)
-      {
-        for (int col = 0; col < Columns; ++col)
-          Matrix[row, col] = ' ';
-      }
     }
 
     public void Draw()
@@ -32,9 +26,9 @@ public partial class FourScore
         output += "|";
         for (int col = 0; col < Columns; ++col)
         {
-          output += Matrix[row, col];
+          output += Matrix[row, col] == '\0' ? ' ' : Matrix[row, col];
           if (col < Columns - 1)
-            output += " ";
+            output += ' ';
         }
         output += "|\n";
       }

@@ -4,8 +4,8 @@ public partial class FourScore
 {
   private class Board
   {
-    public bool IsFinished = false;
-    public int ColumnCount;
+    public bool IsFinished { get; private set; } = false;
+    public int ColumnCount { get; private set; }
 
     private Column[] Columns;
     private int RowCount;

@@ -2,8 +2,8 @@ public partial class FourScore
 {
   private class Player
   {
-    public string Name;
-    public char Token;
+    public string Name { get; }
+    public char Token { get; }
 
     public Player(string name, char token)
     {

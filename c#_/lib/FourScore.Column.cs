@@ -6,7 +6,7 @@ public partial class FourScore
 {
   private class Column
   {
-    public bool IsOpen = true;
+    public bool IsOpen { get; private set; } = true;
 
     private int Pieces = 0;
     private char?[] Cells;

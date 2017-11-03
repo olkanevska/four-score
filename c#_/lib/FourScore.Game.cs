@@ -5,16 +5,16 @@ public partial class FourScore
 {
   private class Game
   {
-    private Board GameBoard;
-    private List<Player> Players = new List<Player>();
-    private int CurrentPlayer = 0;
+    private List<Player> _players = new List<Player>();
+    private int _currentPlayer = 0;
+    private Board _board;
 
     public void Play()
     {
       CreatePlayers();
       CreateBoard();
 
-      while (!GameBoard.IsFinished)
+      while (!_board.IsFinished)
         PlayRound();
 
       Console.WriteLine("Game is over!");
@@ -22,24 +22,23 @@ public partial class FourScore
 
     private void PlayRound()
     {
-      GameBoard.Draw();
-
-      Player p = Players[CurrentPlayer];
-      Console.Write($"[{p.Token}] {p.Name}, please select a column: ");
-
+      Player p = _players[_currentPlayer];
       int column;
+
+      _board.Draw();
+      Console.Write($"[{p.Token}] {p.Name}, please select a column: ");
 
       while (true)
       {
-        column = GetIntInRange(1, GameBoard.ColumnCount);
+        column = GetIntInRange(1, _board.ColumnCount);
 
-        if (GameBoard.AddPiece(column, p.Token))
+        if (_board.AddPiece(column, p.Token))
           break;
 
         Console.Write($"Column {column} is full, please select an open column: ");
       }
 
-      CurrentPlayer = 1 - CurrentPlayer;
+      _currentPlayer = 1 - _currentPlayer;
     }
 
     private void CreatePlayers()
@@ -53,7 +52,7 @@ public partial class FourScore
 
     private void AddPlayer(char token)
     {
-      Players.Add(new Player(GetPlayerName(), token));
+      _players.Add(new Player(GetPlayerName(), token));
     }
 
     private string GetPlayerName()
@@ -66,7 +65,7 @@ public partial class FourScore
 
         if (name == "")
           Console.Write("Please enter a name: ");
-        else if (Players.Exists(p => p.Name == name))
+        else if (_players.Exists(p => p.Name == name))
           Console.Write("Please enter a unique name: ");
         else
           return name;
@@ -86,7 +85,7 @@ public partial class FourScore
 
     private void CreateBasicBoard()
     {
-      GameBoard = new Board(7, 7);
+      _board = new Board(7, 7);
     }
 
     private void CreateCustomBoard()
@@ -97,14 +96,15 @@ public partial class FourScore
       Console.Write("Number of rows (4-9): ");
       int rows = GetIntInRange(4, 9);
 
-      GameBoard = new Board(columns, rows);
+      _board = new Board(columns, rows);
     }
 
     private int GetIntInRange(int lower, int upper)
     {
       int choice;
 
-      while (true) {
+      while (true)
+      {
         bool parsed = int.TryParse(Console.ReadLine(), out choice);
 
         if (parsed && choice >= lower && choice <= upper)

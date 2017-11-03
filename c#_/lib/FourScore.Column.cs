@@ -8,31 +8,33 @@ public partial class FourScore
   {
     public bool IsOpen { get; private set; } = true;
 
-    private int Pieces = 0;
-    private char?[] Cells;
+    private int _pieces = 0;
+    private char?[] _cells;
 
     public Column(int cellCount)
     {
-      Cells = new char?[cellCount];
+      _cells = new char?[cellCount];
     }
 
-    public void AddPiece(char token)
+    public int AddPiece(char token)
     {
-      int openCell = Cells.Length - Pieces - 1;
+      int openCell = _cells.Length - _pieces - 1;
 
-      Cells[openCell] = token;
-      ++Pieces;
+      _cells[openCell] = token;
+      ++_pieces;
 
-      if (Pieces == Cells.Length)
+      if (_pieces == _cells.Length)
         IsOpen = false;
+
+      return openCell;
     }
 
     public char? ContentAt(int cell)
     {
-      if (Cells[cell] == null)
+      if (_cells[cell] == null)
         return ' ';
 
-      return Cells[cell];
+      return _cells[cell];
     }
   }
 }

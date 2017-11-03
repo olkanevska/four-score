@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public partial class FourScore
 {
-  private List<Game> Games = new List<Game>();
+  private List<Game> _games = new List<Game>();
 
   public void Run()
   {
     Console.WriteLine("Welcome to Four Score!");
 
     Game game = new Game();
-    Games.Add(game);
+    _games.Add(game);
     game.Play();
   }
 }

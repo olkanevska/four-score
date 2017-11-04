@@ -19,7 +19,6 @@ public partial class FourScore
     public int AddPiece(char token)
     {
       int openCell = _cells.Length - _pieces - 1;
-
       _cells[openCell] = token;
       ++_pieces;
 

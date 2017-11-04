@@ -37,7 +37,6 @@ public partial class FourScore
 
         Console.Write($"Column {column} is full, please select an open column: ");
       }
-
       _currentPlayer = 1 - _currentPlayer;
     }
 
@@ -45,7 +44,6 @@ public partial class FourScore
     {
       Console.Write("\nFirst player: ");
       AddPlayer('X');
-
       Console.Write("\nSecond player: ");
       AddPlayer('O');
     }
@@ -92,7 +90,6 @@ public partial class FourScore
     {
       Console.Write("Number of columns (4-9): ");
       int columns = GetIntInRange(4, 9);
-
       Console.Write("Number of rows (4-9): ");
       int rows = GetIntInRange(4, 9);
 

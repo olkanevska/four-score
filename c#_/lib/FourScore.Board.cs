@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 public partial class FourScore
 {
@@ -22,39 +23,41 @@ public partial class FourScore
 
     public void Draw()
     {
-      string output = "\n";
+      StringBuilder output = new StringBuilder('\n');
 
-      for (int y = 0; y < _rowCount; ++y)
+      for (int row = 0; row < _rowCount; ++row)
       {
-        output += "|";
+        output.Append('|');
 
-        for (int x = 0; x < ColumnCount; ++x)
-        {
-          output += _columns[x].ContentAt(y);
-          if (x < ColumnCount - 1)
-            output += ' ';
-        }
-        output += "|\n";
+        for (int col = 0; col < ColumnCount; ++col)
+          output.Append($"{_columns[col].ContentAt(row)} ");
+
+        output[output.Length - 1] = '|';
+        output.Append('\n');
       }
-      output += "+" + new String('-', 2 * (ColumnCount - 1)) + "-+\n ";
+      output.Append('+');
 
-      for (int col = 1; col <= ColumnCount; ++col)
-        output += $"{col} ";
+      for (int col = 1; col < ColumnCount * 2; col++)
+        output.Append('-');
 
-      output += '\n';
-      Console.WriteLine(output);
+      output.Append("+\n");
+
+      for (int col = 0; col < ColumnCount; col++)
+        output.Append($" {col + 1}");
+
+      output.Append('\n');
+      Console.WriteLine(output.ToString());
     }
 
     public bool AddPiece(int column, char token)
     {
-      // From UI perspective, "columns" are 1-based
+      // From UI perspective, columns are 1-based
       Column col = _columns[column - 1];
 
       if (!col.IsOpen)
         return false;
 
       int row = col.AddPiece(token);
-
       CheckState(column, row);
 
       return true;

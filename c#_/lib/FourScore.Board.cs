@@ -30,7 +30,7 @@ public partial class FourScore
         output.Append('|');
 
         for (int col = 0; col < ColumnCount; ++col)
-          output.Append($"{_columns[col].ContentAt(row)} ");
+          output.Append($"{_columns[col][row]} ");
 
         output[output.Length - 1] = '|';
         output.Append('\n');
@@ -49,25 +49,56 @@ public partial class FourScore
       Console.WriteLine(output.ToString());
     }
 
-    public bool AddPiece(int column, char token)
+    public int AddPiece(int col, char token)
     {
-      // From UI perspective, columns are 1-based
-      Column col = _columns[column - 1];
+      Column column = _columns[col];
 
-      if (!col.IsOpen)
-        return false;
+      if (!column.IsOpen)
+        return -1;
 
-      int row = col.AddPiece(token);
-      CheckState(column, row);
-
-      return true;
+      return column.AddPiece(token);
     }
 
-    private void CheckState(int col, int row)
+    public void CheckForWin(int col, int row)
     {
-      // Check if draw
-      // Check if winning move
-      // IsFinished = true;
+      // Check if draw TODO
+
+      if (
+        CheckVertical(col, row)   //||
+        // CheckHorizontal(col, row) ||
+        // CheckDiagonal(col, row)   ||
+        // CheckAntidiagonal(col, row)
+      )
+        IsFinished = true;
+
+      // Check for draw only if row is 0
+    }
+
+    private bool CheckVertical(int col, int row)
+    {
+      if (row < 3)
+        return false;
+
+      int count = 1;
+      char? token = _columns[col][row];
+
+      for (int r = row + 1; r < _rowCount; r++)
+      {
+        if (_columns[col][r] != token)
+          break;
+        count++;
+      }
+      return count > 3;
+    }
+
+    private bool CheckHorizontal(int col, int row)
+    {
+    }
+
+    private bool CheckByIncrement(int col, int row, int colIncrement, int rowIncrement)
+    {
+      // char token = _columns[col][row];
+      return false;
     }
   }
 }

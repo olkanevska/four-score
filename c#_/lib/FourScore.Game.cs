@@ -13,6 +13,7 @@ public partial class FourScore
     {
       CreatePlayers();
       CreateBoard();
+      _board.Draw();
 
       while (!_board.IsFinished)
         PlayRound();
@@ -23,20 +24,23 @@ public partial class FourScore
     private void PlayRound()
     {
       Player p = _players[_currentPlayer];
-      int column;
+      int column, row;
 
-      _board.Draw();
       Console.Write($"[{p.Token}] {p.Name}, please select a column: ");
 
       while (true)
       {
-        column = GetIntInRange(1, _board.ColumnCount);
+        // Columns are 1-based on UI
+        column = GetIntInRange(1, _board.ColumnCount) - 1;
+        row = _board.AddPiece(column, p.Token);
 
-        if (_board.AddPiece(column, p.Token))
+        if (row > -1)
           break;
 
         Console.Write($"Column {column} is full, please select an open column: ");
       }
+      _board.Draw();
+      _board.CheckForWin(column, row);
       _currentPlayer = 1 - _currentPlayer;
     }
 

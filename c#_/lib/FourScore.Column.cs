@@ -7,6 +7,9 @@ public partial class FourScore
   private class Column
   {
     public bool IsOpen { get; private set; } = true;
+    public char? this[int index] {
+      get { return ContentAt(index); }
+    }
 
     private int _pieces = 0;
     private char?[] _cells;
@@ -28,7 +31,7 @@ public partial class FourScore
       return openCell;
     }
 
-    public char? ContentAt(int cell)
+    private char? ContentAt(int cell)
     {
       if (_cells[cell] == null)
         return ' ';

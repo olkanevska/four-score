@@ -94,25 +94,17 @@ public partial class FourScore
       int newCol = col + colInc;
       int newRow = row + rowInc;
 
-      if (!ValidCoords(newCol, newRow))
-          return count;
+      try
+      {
+        char? token = _columns[col][row];
+        char? nextToken = _columns[newCol][newRow];
 
-      char? token = _columns[col][row];
-      char? nextToken = _columns[newCol][newRow];
-
-      if (nextToken == token)
-        return CountByIncrement(newCol, newRow, colInc, rowInc, count + 1);
+        if (nextToken == token)
+          return CountByIncrement(newCol, newRow, colInc, rowInc, count + 1);
+      }
+      catch (IndexOutOfRangeException) {}
 
       return count;
-    }
-
-    private bool ValidCoords(int col, int row)
-    {
-      // TODO: clean this up
-      return
-        col >= 0 && row >= 0 &&
-        col < _columns.Length && row < _rowLength;
-
     }
   }
 }

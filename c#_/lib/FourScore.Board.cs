@@ -63,9 +63,9 @@ public partial class FourScore
     {
       if (
         CheckVertical(col, row)   ||
-        CheckHorizontal(col, row) //||
-        // CheckDiagonal(col, row)   ||
-        // CheckAntidiagonal(col, row)
+        CheckHorizontal(col, row) ||
+        CheckDiagonal(col, row)   ||
+        CheckAntidiagonal(col, row)
       )
         IsFinished = true;
 
@@ -75,7 +75,7 @@ public partial class FourScore
 
     private bool CheckVertical(int col, int row)
     {
-      if (row < 3)
+      if (row > _rowLength - 4)
         return false;
 
       return CountByIncrement(col, row, 0, 1) > 2;
@@ -86,6 +86,22 @@ public partial class FourScore
       return (
         CountByIncrement(col, row, -1, 0) +
         CountByIncrement(col, row,  1, 0)
+      ) > 2;
+    }
+
+    private bool CheckDiagonal(int col, int row) // \-direction
+    {
+      return (
+        CountByIncrement(col, row, -1,  1) +
+        CountByIncrement(col, row,  1, -1)
+      ) > 2;
+    }
+
+    private bool CheckAntidiagonal(int col, int row) // /-direction
+    {
+      return (
+        CountByIncrement(col, row, -1, -1) +
+        CountByIncrement(col, row,  1,  1)
       ) > 2;
     }
 

@@ -62,10 +62,10 @@ public partial class FourScore
     public void CheckForWin(int col, int row)
     {
       if (
-        CheckVertical(col, row)   ||
-        CheckHorizontal(col, row) ||
-        CheckDiagonal(col, row)   ||
-        CheckAntidiagonal(col, row)
+        CheckVertical(col, row)       ||
+        CheckDirections(col, row)     || // horizontal
+        CheckDirections(col, row, -1) || // diagonal \
+        CheckDirections(col, row,  1)    // diagonal /
       )
         IsFinished = true;
 
@@ -81,27 +81,11 @@ public partial class FourScore
       return CountByIncrement(col, row, 0, 1) > 2;
     }
 
-    private bool CheckHorizontal(int col, int row)
+    private bool CheckDirections(int col, int row, int rowInc = 0)
     {
       return (
-        CountByIncrement(col, row, -1, 0) +
-        CountByIncrement(col, row,  1, 0)
-      ) > 2;
-    }
-
-    private bool CheckDiagonal(int col, int row) // \-direction
-    {
-      return (
-        CountByIncrement(col, row, -1,  1) +
-        CountByIncrement(col, row,  1, -1)
-      ) > 2;
-    }
-
-    private bool CheckAntidiagonal(int col, int row) // /-direction
-    {
-      return (
-        CountByIncrement(col, row, -1, -1) +
-        CountByIncrement(col, row,  1,  1)
+        CountByIncrement(col, row,  1, 0 + rowInc) +
+        CountByIncrement(col, row, -1, 0 - rowInc)
       ) > 2;
     }
 

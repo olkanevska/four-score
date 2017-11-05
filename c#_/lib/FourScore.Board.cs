@@ -9,12 +9,12 @@ public partial class FourScore
     public int ColumnCount { get; private set; }
 
     private Column[] _columns;
-    private int _rowCount;
+    private int _rowLength;
 
     public Board(int columns, int rows)
     {
       ColumnCount = columns;
-      _rowCount = rows;
+      _rowLength = rows;
       _columns = new Column[columns];
 
       for (int i = 0; i < columns; ++i)
@@ -25,7 +25,7 @@ public partial class FourScore
     {
       StringBuilder output = new StringBuilder('\n');
 
-      for (int row = 0; row < _rowCount; ++row)
+      for (int row = 0; row < _rowLength; ++row)
       {
         output.Append('|');
 
@@ -61,16 +61,15 @@ public partial class FourScore
 
     public void CheckForWin(int col, int row)
     {
-      // Check if draw TODO
-
       if (
-        CheckVertical(col, row)   //||
-        // CheckHorizontal(col, row) ||
+        CheckVertical(col, row)   ||
+        CheckHorizontal(col, row) //||
         // CheckDiagonal(col, row)   ||
         // CheckAntidiagonal(col, row)
       )
         IsFinished = true;
 
+      // Check if draw TODO
       // Check for draw only if row is 0
     }
 
@@ -79,26 +78,41 @@ public partial class FourScore
       if (row < 3)
         return false;
 
-      int count = 1;
-      char? token = _columns[col][row];
-
-      for (int r = row + 1; r < _rowCount; r++)
-      {
-        if (_columns[col][r] != token)
-          break;
-        count++;
-      }
-      return count > 3;
+      return CountByIncrement(col, row, 0, 1) > 2;
     }
 
     private bool CheckHorizontal(int col, int row)
     {
+      return (
+        CountByIncrement(col, row, -1, 0) +
+        CountByIncrement(col, row,  1, 0)
+      ) > 2;
     }
 
-    private bool CheckByIncrement(int col, int row, int colIncrement, int rowIncrement)
+    private int CountByIncrement(int col, int row, int colInc, int rowInc, int count = 0)
     {
-      // char token = _columns[col][row];
-      return false;
+      int newCol = col + colInc;
+      int newRow = row + rowInc;
+
+      if (!ValidCoords(newCol, newRow))
+          return count;
+
+      char? token = _columns[col][row];
+      char? nextToken = _columns[newCol][newRow];
+
+      if (nextToken == token)
+        return CountByIncrement(newCol, newRow, colInc, rowInc, count + 1);
+
+      return count;
+    }
+
+    private bool ValidCoords(int col, int row)
+    {
+      // TODO: clean this up
+      return
+        col >= 0 && row >= 0 &&
+        col < _columns.Length && row < _rowLength;
+
     }
   }
 }

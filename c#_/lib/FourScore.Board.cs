@@ -5,15 +5,20 @@ public partial class FourScore
 {
   private class Board
   {
-    public bool IsFinished { get; private set; } = false;
-    public int ColumnCount { get; private set; }
+    public bool IsFinished {
+      get { return IsWin || IsDraw; }
+    }
+    public int ColumnCount {
+      get { return _columns.Length; }
+    }
+    public bool IsWin { get; private set; }
+    public bool IsDraw { get; private set; }
 
     private Column[] _columns;
     private int _rowLength;
 
     public Board(int columns, int rows)
     {
-      ColumnCount = columns;
       _rowLength = rows;
       _columns = new Column[columns];
 
@@ -23,7 +28,7 @@ public partial class FourScore
 
     public void Draw()
     {
-      StringBuilder output = new StringBuilder('\n');
+      StringBuilder output = new StringBuilder();
 
       for (int row = 0; row < _rowLength; ++row)
       {
@@ -59,7 +64,7 @@ public partial class FourScore
       return column.AddPiece(token);
     }
 
-    public void CheckForWin(int col, int row)
+    public void CheckIfDone(int col, int row)
     {
       if (
         CheckVertical(col, row)       ||
@@ -67,10 +72,21 @@ public partial class FourScore
         CheckDirections(col, row, -1) || // diagonal \
         CheckDirections(col, row,  1)    // diagonal /
       )
-        IsFinished = true;
+        IsWin = true;
+      else if (CheckIfDraw(row))
+        IsDraw = true;
+    }
 
-      // Check if draw TODO
-      // Check for draw only if row is 0
+    private bool CheckIfDraw(int row)
+    {
+      if (row > 0)
+        return false;
+
+      for (int col = 0; col < ColumnCount; col++)
+        if (_columns[col][row] == Column.DefaultCell)
+            return false;
+
+      return true;
     }
 
     private bool CheckVertical(int col, int row)

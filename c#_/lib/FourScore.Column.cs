@@ -6,6 +6,8 @@ public partial class FourScore
 {
   private class Column
   {
+    public static char DefaultCell = ' ';
+
     public bool IsOpen { get; private set; } = true;
     public char? this[int index] {
       get { return ContentAt(index); }
@@ -34,7 +36,7 @@ public partial class FourScore
     private char? ContentAt(int cell)
     {
       if (_cells[cell] == null)
-        return ' ';
+        return DefaultCell;
 
       return _cells[cell];
     }

@@ -5,79 +5,53 @@ public partial class FourScore
 {
   private class Game
   {
-    private List<Player> _players = new List<Player>();
-    private int _currentPlayer = 0;
-    private Board _board;
+    private int currentPlayer;
+    private Board board;
 
-    public void Play()
+    public Game(int currentPlayer = 0)
     {
-      CreatePlayers();
-      CreateBoard();
-      Console.WriteLine();
-      _board.Draw();
-
-      while (!_board.IsFinished)
-        PlayRound();
-
-      Console.WriteLine("Game is over!");
+      this.currentPlayer = currentPlayer;
     }
 
-    private void PlayRound()
+    public void Play(List<Player> players)
     {
-      Player p = _players[_currentPlayer];
-      int column, row;
+      CreateBoard();
+      this.board.Draw();
 
+      while (this.board.IsPlayable)
+      {
+        PlayRound(players[this.currentPlayer]);
+        this.currentPlayer = 1 - this.currentPlayer;
+      }
+
+      if (this.board.IsWin)
+      {
+        Player p = players[1 - this.currentPlayer];
+        Console.WriteLine($"{p.Name} wins!");
+      }
+      else
+      {
+        Console.WriteLine("Game is a draw.");
+      }
+    }
+
+    private void PlayRound(Player p)
+    {
+      int column, row;
       Console.Write($"[{p.Token}] {p.Name}, please select a column: ");
 
       while (true)
       {
-        column = GetIntInRange(1, _board.ColumnCount) - 1;
-        row = _board.AddPiece(column, p.Token);
+        column = GetIntInRange(1, this.board.ColumnCount) - 1;
+        row = this.board.AddPiece(column, p.Token);
 
         if (row > -1)
           break;
 
         Console.Write($"Column {column + 1} is full, please select an open column: ");
       }
-      Console.WriteLine();
-      _board.Draw();
-      _board.CheckIfDone(column, row);
-      SwitchPlayers();
-    }
-
-    private void CreatePlayers()
-    {
-      Console.Write("\nFirst player: ");
-      AddPlayer('X');
-      Console.Write("\nSecond player: ");
-      AddPlayer('O');
-    }
-
-    private void AddPlayer(char token)
-    {
-      _players.Add(new Player(GetPlayerName(), token));
-    }
-
-    private string GetPlayerName()
-    {
-      string name;
-
-      while (true)
-      {
-        name = Console.ReadLine();
-
-        if (name == "")
-          Console.Write("Please enter a name: ");
-        else if (_players.Exists(p => p.Name == name))
-          Console.Write("Please enter a unique name: ");
-        else
-          return name;
-      }
-    }
-
-    private void SwitchPlayers()
-    {
-      _currentPlayer = 1 - _currentPlayer;
+      this.board.Draw();
+      this.board.CheckIfDone(column, row);
     }
 
     private void CreateBoard()
@@ -93,7 +67,7 @@ public partial class FourScore
 
     private void CreateBasicBoard()
     {
-      _board = new Board(7, 7);
+      this.board = new Board(7, 7);
     }
 
     private void CreateCustomBoard()
@@ -103,7 +77,7 @@ public partial class FourScore
       Console.Write("Number of rows (4-9): ");
       int rows = GetIntInRange(4, 9);
 
-      _board = new Board(columns, rows);
+      this.board = new Board(columns, rows);
     }
 
     private int GetIntInRange(int lower, int upper)

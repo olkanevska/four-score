@@ -1,44 +1,28 @@
 /*
- * "Top" of column is index 0, "bottom" is index <cellCount>
+ * "Top" of column is index 0
  */
 
 public partial class FourScore
 {
   private class Column
   {
-    public static char DefaultCell = ' ';
+    public bool IsOpen => this.pieces < this.rows.Length;
+    public char? this[int row] => this.rows[row] ?? ' ';
 
-    public bool IsOpen { get; private set; } = true;
-    public char? this[int index] {
-      get { return ContentAt(index); }
-    }
+    private int pieces = 0;
+    private char?[] rows;
 
-    private int _pieces = 0;
-    private char?[] _cells;
-
-    public Column(int cellCount)
+    public Column(int rowCount)
     {
-      _cells = new char?[cellCount];
+      this.rows = new char?[rowCount];
     }
 
     public int AddPiece(char token)
     {
-      int openCell = _cells.Length - _pieces - 1;
-      _cells[openCell] = token;
-      ++_pieces;
-
-      if (_pieces == _cells.Length)
-        IsOpen = false;
-
-      return openCell;
-    }
-
-    private char? ContentAt(int cell)
-    {
-      if (_cells[cell] == null)
-        return DefaultCell;
-
-      return _cells[cell];
+      int openRow = this.rows.Length - this.pieces - 1;
+      this.rows[openRow] = token;
+      ++this.pieces;
+      return openRow;
     }
   }
 }

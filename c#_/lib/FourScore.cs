@@ -5,30 +5,32 @@ using System.Linq;
 public partial class FourScore
 {
   private List<Player> players = new List<Player>();
-  private Dictionary<string, int> wins = new Dictionary<string, int>();
   private int gamesPlayed = 0;
 
   public void Run()
   {
+    int startingPlayer = 0;
     Console.WriteLine("Welcome to FourScore C#!");
     CreatePlayers();
-    string play = "y";
 
-    while (play == "y")
+    do
     {
-      Game game = new Game();
+      Game game = new Game(startingPlayer);
       Player winner = game.Play(this.players);
-      play = PlayAgain();
-      this.gamesPlayed++;
 
       if (winner != null)
-        this.wins[winner.Name]++;
+        ++winner.Wins;
+
+      ++this.gamesPlayed;
+      startingPlayer = 1 - startingPlayer;
     }
+    while (PlayAgain());
+
     PrintStats();
     Console.WriteLine("\nThanks for playing!");
   }
 
-  private string PlayAgain()
+  private bool PlayAgain()
   {
     string[] choices = { "y", "n" };
     string choice;
@@ -45,19 +47,20 @@ public partial class FourScore
       Console.Write("Please enter a valid choice (y/n): ");
     }
 
-    return choice;
+    return choice == "y";
   }
 
   private void PrintStats()
   {
     // TODO: do not pluralize for 1 draws/wins
-    int draws = this.gamesPlayed - this.wins.Sum(x => x.Value);
+    int draws = this.gamesPlayed - this.players.Sum(p => p.Wins);
+
     Console.WriteLine($"\nTOTAL GAMES: {this.gamesPlayed}");
     Console.WriteLine($"  {draws} draws");
+
     this.players.ForEach(delegate(Player p)
     {
-      int wins = this.wins[p.Name];
-      Console.WriteLine($"  {wins} wins for {p.Name}");
+      Console.WriteLine($"  {p.Wins} wins for {p.Name}");
     });
   }
 
@@ -73,7 +76,6 @@ public partial class FourScore
   {
     Player p = new Player(GetPlayerName(), token);
     this.players.Add(p);
-    this.wins[p.Name] = 0;
   }
 
   private string GetPlayerName()

@@ -19,9 +19,13 @@ public partial class FourScore
 
     public int AddPiece(char token)
     {
+      if (!IsOpen)
+        return -1;
+
       int openRow = this.rows.Length - this.pieces - 1;
       this.rows[openRow] = token;
       ++this.pieces;
+
       return openRow;
     }
   }

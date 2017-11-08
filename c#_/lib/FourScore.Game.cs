@@ -83,10 +83,11 @@ public partial class FourScore
     private int GetIntInRange(int lower, int upper)
     {
       int choice;
+      bool parsed;
 
       while (true)
       {
-        bool parsed = int.TryParse(Console.ReadLine(), out choice);
+        parsed = int.TryParse(Console.ReadLine(), out choice);
 
         if (parsed && choice >= lower && choice <= upper)
           return choice;

@@ -4,6 +4,7 @@ public partial class FourScore
   {
     public string Name { get; }
     public char Token { get; }
+    public int Wins { get; set; } = 0;
 
     public Player(string name, char token)
     {

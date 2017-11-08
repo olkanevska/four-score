@@ -24,45 +24,56 @@ public partial class FourScore
 
     public void Draw()
     {
-      StringBuilder output = new StringBuilder();
+      StringBuilder s = new StringBuilder();
 
       for (int row = 0; row < this.rowLength; ++row)
       {
-        output.Append('|');
+        s.Append('|');
 
         for (int col = 0; col < ColumnCount; ++col)
-          output.Append($"{this.columns[col][row]} ");
+          s.Append($"{this.columns[col][row]} ");
 
-        output[output.Length - 1] = '|';
-        output.Append('\n');
+        s[s.Length - 1] = '|';
+        s.Append('\n');
       }
-      output.Append('+');
+      s.Append('+');
 
-      for (int col = 1; col < ColumnCount * 2; col++)
-        output.Append('-');
+      for (int col = 1; col < ColumnCount * 2; ++col)
+        s.Append('-');
 
-      output.Append("+\n");
+      s.Append("+\n");
 
-      for (int col = 0; col < ColumnCount; col++)
-        output.Append($" {col + 1}");
+      for (int col = 0; col < ColumnCount; ++col)
+        s.Append($" {col + 1}");
 
-      output.Append('\n');
+      s.Append('\n');
       Console.WriteLine();
-      Console.WriteLine(output.ToString());
+      Console.WriteLine(s.ToString());
     }
 
     public int AddPiece(int col, char token)
     {
-      Column column = this.columns[col];
-      return column.IsOpen ? column.AddPiece(token) : -1;
+      return this.columns[col].AddPiece(token);
     }
 
     public void CheckIfDone(int col, int row)
     {
-      if (CheckIfWon(col, row))
-        IsWin = true;
-      else if (CheckIfDraw(row))
-        IsDraw = true;
+      IsWin = CheckIfWon(col, row);
+
+      if (!IsWin)
+        IsDraw = CheckIfDraw(row);
+    }
+
+    private bool CheckIfDraw(int row)
+    {
+      if (row > 0)
+        return false;
+
+      for (int col = 0; col < ColumnCount; ++col)
+        if (this.columns[col].IsOpen)
+            return false;
+
+      return true;
     }
 
     private bool CheckIfWon(int col, int row)
@@ -72,18 +83,6 @@ public partial class FourScore
         CheckDirections(col, row)     || // horizontal
         CheckDirections(col, row, -1) || // diagonal \
         CheckDirections(col, row,  1);   // diagonal /
-    }
-
-    private bool CheckIfDraw(int row)
-    {
-      if (row > 0)
-        return false;
-
-      for (int col = 0; col < ColumnCount; col++)
-        if (this.columns[col].IsOpen)
-            return false;
-
-      return true;
     }
 
     private bool CheckVertical(int col, int row)

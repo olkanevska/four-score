@@ -13,7 +13,7 @@ public partial class FourScore
       this.currentPlayer = currentPlayer;
     }
 
-    public void Play(List<Player> players)
+    public Player Play(List<Player> players)
     {
       CreateBoard();
       this.board.Draw();
@@ -26,13 +26,13 @@ public partial class FourScore
 
       if (this.board.IsWin)
       {
-        Player p = players[1 - this.currentPlayer];
-        Console.WriteLine($"{p.Name} wins!");
+        Player winner = players[1 - this.currentPlayer];
+        Console.WriteLine($"\n{winner.Name} wins!\n");
+        return winner;
       }
-      else
-      {
-        Console.WriteLine("Game is a draw.");
-      }
+
+      Console.WriteLine("\nDraw.\n");
+      return null;
     }
 
     private void PlayRound(Player p)

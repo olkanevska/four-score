@@ -58,10 +58,7 @@ public partial class FourScore
     Console.WriteLine($"\nTOTAL GAMES: {this.gamesPlayed}");
     Console.WriteLine($"  {draws} draws");
 
-    this.players.ForEach(delegate(Player p)
-    {
-      Console.WriteLine($"  {p.Wins} wins for {p.Name}");
-    });
+    this.players.ForEach(p => Console.WriteLine($"  {p.Wins} wins for {p.Name}"));
   }
 
   private void CreatePlayers()

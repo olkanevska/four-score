@@ -4,3 +4,5 @@
 2. `dotnet run`
 3. ..?
 4. Profit!
+
+To run tests: `dotnet xunit`

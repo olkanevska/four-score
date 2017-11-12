@@ -4,6 +4,6 @@ class Program
 {
   static void Main()
   {
-    (new FourScore()).Run();
+    (new FourScore.App()).Run();
   }
 }

@@ -2,9 +2,9 @@
  * "Top" of column is index 0
  */
 
-public partial class FourScore
+namespace FourScore
 {
-  private class Column
+  internal class Column
   {
     public bool IsOpen => this.pieces < this.rows.Length;
     public char? this[int row] => this.rows[row] ?? ' ';

@@ -1,6 +1,6 @@
-public partial class FourScore
+namespace FourScore
 {
-  private class Player
+  internal class Player
   {
     public string Name { get; }
     public char Token { get; }

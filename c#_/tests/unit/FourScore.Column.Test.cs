@@ -1,6 +1,6 @@
 using Xunit;
 
-public partial class FourScore
+namespace FourScore
 {
   public class Column_Test
   {
@@ -20,7 +20,7 @@ public partial class FourScore
       Column col = NewColumn();
       for (int i = 0; i < pieces; ++i)
         col.AddPiece('x');
-      Assert.Equal(true, col.IsOpen);
+      Assert.True(col.IsOpen);
     }
 
     [Fact]
@@ -29,9 +29,8 @@ public partial class FourScore
       Column col = NewColumn();
       for (int i = 0; i < this.rowCount; ++i)
         col.AddPiece('x');
-      Assert.Equal(false, col.IsOpen);
+      Assert.True(!col.IsOpen);
     }
-
 
     [Theory]
     [InlineData(0)]

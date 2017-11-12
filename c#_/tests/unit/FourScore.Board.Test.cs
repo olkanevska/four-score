@@ -1,6 +1,6 @@
 using Xunit;
 
-public partial class FourScore
+namespace FourScore
 {
   public class Board_Test
   {

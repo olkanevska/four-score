@@ -1,9 +1,9 @@
 using System;
 using System.Text;
 
-public partial class FourScore
+namespace FourScore
 {
-  private class Board
+  internal class Board
   {
     public int ColumnCount => this.columns.Length;
     public bool IsPlayable => !IsWin && !IsDraw;

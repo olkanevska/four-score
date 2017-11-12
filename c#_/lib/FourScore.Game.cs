@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-public partial class FourScore
+namespace FourScore
 {
-  private class Game
+  internal class Game
   {
     private int currentPlayer;
     private Board board;

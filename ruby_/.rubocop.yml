@@ -1,0 +1,70 @@
+AllCops:
+  Exclude:
+    - 'ui_tests/**/*'
+    - 'vendor/assets/bower_components/**/*'
+    - 'db/**/*'
+    - 'vendor/**/*'
+    - 'bin/*'
+    - 'log/**/*'
+    - 'public/**/*'
+    - 'node_modules/**/*'
+    - 'spec/**/*.rb'
+    - 'config/initializers/*'
+
+LineLength:
+  Enabled: false
+
+Documentation:
+  Enabled: false
+
+MethodLength:
+  Exclude:
+    - 'db/migrate/*'
+
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+ClassAndModuleChildren:
+  Enabled: false
+
+Lambda:
+  Enabled: false
+
+StringLiterals:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  Enabled: false
+
+GuardClause:
+  Enabled: false
+
+NumericLiterals:
+  Enabled: false
+
+MethodLength:
+  Max: 20
+
+Metrics/BlockLength:
+  ExcludedMethods: ['describe', 'context']
+
+Metrics/ParameterLists:
+  Max: 7
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "spec/**/*"
+
+Metrics/BlockLength:
+  Exclude:
+    - config/environments/development.rb
+    - config/environments/production.rb
+    - config/routes.rb
+    - config/initializers/*.rb
+    - spec/**/*.rb
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false

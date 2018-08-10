@@ -13,21 +13,14 @@ module FourScore
       until @finished
         print_board
         print move_prompt
-        set_current_move
+        current_move
 
         @board.drop_into_column(@current_move, @current_player.token)
 
         if @board.victory?(@current_move, @current_player.token)
-          print_board
-          puts "#{@current_player.name} wins!"
-          @winner = @current_player
-          @finished = true
-
+          victory_action
         elsif @board.draw?
-          print_board
-          puts "The game is a draw"
-          @finished = true
-
+          draw_action
         else
           switch_players
         end
@@ -36,34 +29,45 @@ module FourScore
 
     private
 
-      def switch_players
-        @current_player, @next_player = @next_player, @current_player
-      end
+    def draw_action
+      print_board
+      puts 'The game is a draw'
+      @finished = true
+    end
 
-      def print_board
-        puts
-        puts @board.display
-        puts
-      end
+    def victory_action
+      print_board
+      puts "#{@current_player.name} wins!"
+      @winner = @current_player
+      @finished = true
+    end
 
-      def move_prompt
-        "[#{@current_player.token}] #{@current_player.name}, please select a column: "
-      end
+    def switch_players
+      @current_player, @next_player = @next_player, @current_player
+    end
 
-      def valid_prompt
-        "Please select a valid column: "
-      end
+    def print_board
+      puts @board.display
+    end
 
-      def open_prompt(column)
-        "Column #{column} is full, please select an open column: "
-      end
+    def move_prompt
+      "[#{@current_player.token}] #{@current_player.name}, please select a column: "
+    end
 
-      def set_current_move(move = gets.chomp.to_i)
-        until @board.valid_move?(move) && @board.column_open?(move)
-          print @board.column_open?(move) ? valid_prompt : open_prompt(move)
-          move = gets.chomp.to_i
-        end
-        @current_move = move
+    def valid_prompt
+      "\nPlease select a valid column: "
+    end
+
+    def open_prompt(column)
+      "\nColumn #{column} is full, please select an open column: "
+    end
+
+    def current_move(move = gets.chomp.to_i)
+      until @board.valid_move?(move) && @board.column_open?(move)
+        print @board.column_open?(move) ? valid_prompt : open_prompt(move)
+        move = gets.chomp.to_i
       end
+      @current_move = move
+    end
   end
 end

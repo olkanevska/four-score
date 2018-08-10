@@ -45,7 +45,7 @@ module FourScore
     end
 
     def drop_into_column(column, piece)
-      if place_piece(trans_x(column), piece)
+      if place_piece?(trans_x(column), piece)
         @moves += 1
         true
       else
@@ -73,13 +73,13 @@ module FourScore
       -1
     end
 
-    def place_piece(x, value, y = rows - 1)
+    def place_piece?(x, value, y = rows - 1)
       return false if y < 0
       if coords(x, y).nil?
         set_coords(x, y, value)
         return true
       else
-        place_piece(x, value, y - 1)
+        place_piece?(x, value, y - 1)
       end
     end
 

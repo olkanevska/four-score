@@ -36,17 +36,18 @@ module FourScore
     def put_statistics
       puts "\nTOTAL GAMES: #{@games.count}"
       draws = @game_scores[:draws]
-      puts "  #{draws} draw#{'s' unless draws == 1}"
-      player1 = @players.first.name
-      player2 = @players.last.name
-      wins1 = @game_scores[player1]
-      wins2 = @game_scores[player2]
-      puts_stat(wins1, wins2, player1, player2)
+      puts "  #{draws} #{pluralize('draw', draws)}"
+      @players.each do |player|
+        puts_stat(@game_scores[player.name], player.name)
+      end
     end
 
-    def puts_stat(wins1, wins2, player1, player2)
-      puts "  #{wins1} win#{'s' unless wins1 == 1} for #{player1}"
-      puts "  #{wins2} win#{'s' unless wins2 == 1} for #{player2}"
+    def pluralize(word, count)
+      count > 1 ? "#{word}s" : word
+    end
+
+    def puts_stat(wins, player)
+      puts "  #{wins} #{pluralize('win', wins)} for #{player}"
     end
 
     def init_players

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module FourScore # rubocop:disable Metrics/ModuleLength
+module FourScore
   describe Board do
     let(:board) { Board.new }
     let(:small_board) { Board.new(rows: 2, columns: 2) }
